@@ -12,7 +12,12 @@ namespace DevInSales.Controllers
     [Route("api/authentication")]
     public class AuthenticationController : ControllerBase
     {
-
+        /// <summary>
+        /// Realiza login por nome do usuário e senha
+        /// </summary>
+        /// <returns>Token de Autenticação</returns>
+        /// <response code="200">Login efetuado com sucesso.</response>
+        /// <response code="404">Usuário e/ou senha incorreto(s).</response>
         [HttpPost]
         [Route("login")]
         public IActionResult Login([FromBody] LoginDTO dto)
