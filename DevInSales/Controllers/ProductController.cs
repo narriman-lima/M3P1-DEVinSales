@@ -37,7 +37,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<IEnumerable<ProductGetDTO>>> GetProduct(string? name, decimal? price_min, decimal? price_max)
         {
             if (price_max < price_min)

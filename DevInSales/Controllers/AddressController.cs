@@ -27,7 +27,7 @@ namespace DevInSales.Controllers
 
         // GET: api/Addresse
         [HttpGet]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<IEnumerable<Address>>> GetAddress()
         {
             return await _context.Address.ToListAsync();
@@ -36,7 +36,7 @@ namespace DevInSales.Controllers
 
         // GET: api/Addresse/5
         [HttpGet("{id}")]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
 
 
 
@@ -55,25 +55,10 @@ namespace DevInSales.Controllers
         [HttpGet("address")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
-        //public async Task<ActionResult<IEnumerable<AddressDTO>>> GetAddress(string CEP, string Street, CityStateDTO CityStateDTO)
-        //{
-
-        //    List<Address> retorno = new List<Address>();
-        //    if (Street == null)
-        //        return Ok(await _context.Address.ToListAsync());
-
-        //    var temporario = await _context.Address.FirstOrDefaultAsync(x => x.Street.Contains(Street));
-
-        //    if (temporario == null)
-        //        return NoContent();
-        //    retorno.Add(temporario);
-        //    return Ok(retorno);
-        //}
+        [Authorize(Roles = "usuario, gerente, administrador")]
 
         public async Task<ActionResult<AddressDTO>> GetAddress(string CEP, string Street, CityStateDTO CityStateDTO)
         {
-            //return _sqlContext.Clientes.Include(x => x.Endereco).Select(x => (ClienteDTO)x).ToList();
             var street_find = await _context.Address.FindAsync(Street);
             var cep_find = await _context.Address.FindAsync(CEP);
 
@@ -216,11 +201,5 @@ namespace DevInSales.Controllers
                 return StatusCode(500);
             }
         }
-
-
-
-
-
-
     }
 }

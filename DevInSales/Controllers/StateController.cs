@@ -28,7 +28,7 @@ namespace DevInSales.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<IEnumerable<State>>> GetState(string name)
         {
             List<State> retorno = new List<State>();
@@ -42,7 +42,7 @@ namespace DevInSales.Controllers
         }
         //GET /state/{state_id}/
         [HttpGet("/state/{state_id}")]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<IEnumerable<State>>> GetStateId(int state_id)
         {
             try
@@ -63,7 +63,7 @@ namespace DevInSales.Controllers
 
         // GET: api/State/5
         [HttpGet("{id}")]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<State>> GetState(int id)
         {
             var state = await _context.State.FindAsync(id);
@@ -79,7 +79,7 @@ namespace DevInSales.Controllers
         [HttpGet("{State_Id}/city")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<List<CityStateDTO>>> GetByStateIdCity(int State_Id, string name)
         {
             var state = await _context.State.FindAsync(State_Id);
@@ -130,7 +130,7 @@ namespace DevInSales.Controllers
 
         [HttpGet("{State_Id}/city/{City_Id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<CityStateDTO>> GetByStateIdCityId(int State_Id, int City_Id)
         {
             var state_find = await _context.State.FindAsync(State_Id);

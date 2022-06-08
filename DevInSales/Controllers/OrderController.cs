@@ -31,7 +31,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<ICollection<Order>>> GetUserId(int user_id)
         {
             try
@@ -63,7 +63,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<ICollection<Order>>> GetBuyId(int user_id)
         {
             try
@@ -178,7 +178,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<Order>> GetOrderId(int orderProduct_id)
         {
             try
