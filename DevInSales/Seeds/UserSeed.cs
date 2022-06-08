@@ -12,7 +12,7 @@ namespace DevInSales.Seeds
             Email = "romeu@lenda.com",
             Password = "romeu123@",
             ProfileId = 1,
-            Role = "funcionario"
+            Role = "usuario"
         }, new User()
         {
             Id = 2,
@@ -21,7 +21,7 @@ namespace DevInSales.Seeds
             Email = "gustavo_levi_ferreira@gmail.com",
             Password = "!romeu321",
             ProfileId = 1,
-            Role = "funcionario"
+            Role = "usuario"
         }, new User()
         {
             Id = 3,

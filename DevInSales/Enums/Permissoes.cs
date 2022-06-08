@@ -4,8 +4,8 @@ namespace DevInSales.Enums
 {
     public enum Permissoes
     {
-        [Display(Name = "Funcionario")]
-        Funcionario = 1,
+        [Display(Name = "Usuario")]
+        Usuario = 1,
         [Display(Name = "Gerente")]
         Gerente = 2,
         [Display(Name = "Administrador")]

@@ -21,7 +21,7 @@ namespace DevInSales.Controllers
 
         [HttpGet]
         [Route("{cityId:int}")]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public ActionResult<IList<FreightResult>> GetFreight(int cityId)
         {
             var cityPricesQueryable = _context.CityPrice.AsQueryable();
@@ -44,7 +44,7 @@ namespace DevInSales.Controllers
 
         [HttpGet]
         [Route("company/name")]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<IEnumerable<ShippingCompany>>> GetCompanyByName(string? name)
         {
             if (name == null)
@@ -61,7 +61,7 @@ namespace DevInSales.Controllers
 
         [HttpGet]
         [Route("company/{id:int}")]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<ShippingCompany>> GetCompanyById(int id)
         {
             var company = await _context.ShippingCompany.FindAsync(id);
@@ -76,7 +76,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<List<StatePrice>>> GetStateCompanyById(int stateId, int companyId)
         {
             try
@@ -100,7 +100,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "funcionario, gerente, administrador")]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<List<CityPrice>>> GetCityCompanyById(int cityId, int companyId)
         {
             try
