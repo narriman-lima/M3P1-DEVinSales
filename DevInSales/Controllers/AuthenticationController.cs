@@ -33,6 +33,19 @@ namespace DevInSales.Controllers
             return Ok($"Bem-vindo(a) {dto.Username} ao sistema de funcionários DEVinSales.\nEste é seu token: \n\n" + token);
 
         }
+
+        /// <summary>
+        /// Lista os usuários cadastrados para facilitar o acesso à informações para login
+        /// </summary>
+        /// <returns>Lista de usuários</returns>
+        /// <response code="200">Lista de usuários encontrada.</response>
+        /// <response code="404">Lista não encontrada.</response>
+        [Route("funcionarios")]
+        [HttpGet]
+        public IActionResult ListarUsuarios()
+        => User.IsInRole(Permissoes.Usuario.GetDisplayName())
+        ? Ok(UserRepository.ListarUsuarios().Select(x => new { x.Name, x.DescricaoPermissao }))
+        : Ok(UserRepository.ListarUsuarios());
     }
 }
 
