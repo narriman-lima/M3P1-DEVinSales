@@ -14,7 +14,6 @@ namespace DevInSales.Controllers
     [Route("api/authentication")]
     public class AuthenticationController : ControllerBase
     {
-
         /// <summary>
         /// Realiza login por nome do usuário e senha
         /// </summary>
