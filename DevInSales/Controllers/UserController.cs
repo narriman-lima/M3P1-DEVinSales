@@ -29,10 +29,14 @@ namespace DevInSales.Controllers
         /// <returns>Retorna lista de usuários consultados.</returns>
         /// <response code="200">Retorno da lista de usuários consultados.</response>
         /// <response code="400">Requisição inválida.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Usuário não encontrado.</response>
         /// <response code="500">Ocorreu uma exceção durante a consulta.</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
@@ -79,10 +83,14 @@ namespace DevInSales.Controllers
         /// <returns>Retorna o resultado do User cadastrado.</returns>
         /// <response code="200">Retorno do User cadastrado.</response>
         /// <response code="400">Usuário menor de idade ou email já cadastrado.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Perfil não encontrado.</response>
         /// <response code="500">Ocorreu uma exceção durante o cadastro.</response>
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost]
@@ -130,9 +138,13 @@ namespace DevInSales.Controllers
         /// <param name="user_id">O Id do usuário para ser deletado.</param>
         /// <returns>Deleta o usuário conforme o Id informado.</returns>
         /// <response code="200">Usuário deletado.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Usuário não encontrado.</response>
         [HttpDelete("{user_id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Roles = "administrador")]
         public async Task<IActionResult> DeleteUser([FromRoute] int user_id)

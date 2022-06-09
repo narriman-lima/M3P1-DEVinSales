@@ -19,8 +19,12 @@ namespace DevInSales.Controllers
         /// </summary>
         /// <returns>Token de Autenticação</returns>
         /// <response code="200">Login efetuado com sucesso.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Usuário e/ou senha incorreto(s).</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [Route("login")]
         public IActionResult Login([FromBody] LoginDTO dto)
         {
@@ -39,9 +43,13 @@ namespace DevInSales.Controllers
         /// </summary>
         /// <returns>Lista de usuários</returns>
         /// <response code="200">Lista de usuários encontrada.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Lista não encontrada.</response>
         [Route("funcionarios")]
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public IActionResult ListarUsuarios()
         => User.IsInRole(Permissoes.Usuario.GetDisplayName())
         ? Ok(UserRepository.ListarUsuarios().Select(x => new { x.Name, x.DescricaoPermissao }))
