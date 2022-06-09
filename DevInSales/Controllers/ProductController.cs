@@ -5,6 +5,7 @@ using DevInSales.Context;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,10 +33,15 @@ namespace DevInSales.Controllers
         /// <response code="200">Retorno da lista de produto(s) consultado(s).</response>
         /// <response code="204">Sem nenhum retorno.</response>
         /// <response code="400">Erro ao fazer a Request.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet(Name = "GetProduct")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<IEnumerable<ProductGetDTO>>> GetProduct(string? name, decimal? price_min, decimal? price_max)
         {
             if (price_max < price_min)
@@ -71,13 +77,18 @@ namespace DevInSales.Controllers
         /// <returns>Retorna o novo Produto cadastrado.</returns>
         /// <response code="201">Inserção realizada com sucesso.</response>
         /// <response code="400">Produto com mesmo nome já cadastrado, ou preço sugerido menor ou igual à 0.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Produto não encontrado.</response>
         /// <response code="500">Ocorreu uma exceção durante o cadastro.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult<Product>> PostProduct([FromBody] ProductPostAndPutDTO product)
         {
             bool productNameExists = _sqlContext.Product.Any(x => x.Name == product.Name);
@@ -102,14 +113,19 @@ namespace DevInSales.Controllers
         /// <param name="requisicao">Representa as informações que serão atualizadas do Produto.</param>
         /// <response code="204">Atualização realizada com sucesso.</response>
         /// <response code="400">Já existe um outro produto com o nome a ser modificado, ou Preço sugerido menor ou igual à 0, ou o Nome e Preço não foram inserios.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Id do Produto não foi encontrado.</response>
         /// <response code="500">Ocorreu uma exceção durante a atualização.</response>
         /// <returns></returns>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult<Product>> PutProduct(int id, ProductPostAndPutDTO product)
         {
             bool productIdExists = _sqlContext.Product.Any(x => x.Id == id);
@@ -162,14 +178,18 @@ namespace DevInSales.Controllers
         /// <response code="200">Produto Atualizado</response>
         /// <response code="204">Sem nenhum retorno.</response>
         /// <response code="400">Erro ao fazer a Request.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">produto inexistente</response>
-
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPatch("{id}")]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult<Product>> PatchProduct(int id, ProductPatchDTO productModel)
         {
             var product = await _sqlContext.Product.FindAsync(id);
@@ -222,11 +242,16 @@ namespace DevInSales.Controllers
         /// <returns>Deleta o produto conforme o Id informado.</returns>
         /// <response code="204">Produto deletado.</response>
         /// <response code="400">Produto com Ordem de Produto Vinculada.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Produto não encontrado.</response>
         [HttpDelete("{product_id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "administrador")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int product_id)
         {
             var productIdEncontrado = await _sqlContext.Product.FindAsync(product_id);

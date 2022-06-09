@@ -10,7 +10,7 @@ using DevInSales.Context;
 using DevInSales.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using DevInSales.DTOs;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevInSales.Controllers
 {
@@ -26,7 +26,12 @@ namespace DevInSales.Controllers
         }
 
         // GET: api/Addresse
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<IEnumerable<Address>>> GetAddress()
         {
             return await _context.Address.ToListAsync();
@@ -34,10 +39,12 @@ namespace DevInSales.Controllers
         }
 
         // GET: api/Addresse/5
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet("{id}")]
-
-
-
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<Address>> GetAddress(int id)
         {
             var address = await _context.Address.FindAsync(id);
@@ -50,27 +57,17 @@ namespace DevInSales.Controllers
             return address;
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet("address")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        //public async Task<ActionResult<IEnumerable<AddressDTO>>> GetAddress(string CEP, string Street, CityStateDTO CityStateDTO)
-        //{
-
-        //    List<Address> retorno = new List<Address>();
-        //    if (Street == null)
-        //        return Ok(await _context.Address.ToListAsync());
-
-        //    var temporario = await _context.Address.FirstOrDefaultAsync(x => x.Street.Contains(Street));
-
-        //    if (temporario == null)
-        //        return NoContent();
-        //    retorno.Add(temporario);
-        //    return Ok(retorno);
-        //}
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
 
         public async Task<ActionResult<AddressDTO>> GetAddress(string CEP, string Street, CityStateDTO CityStateDTO)
         {
-            //return _sqlContext.Clientes.Include(x => x.Endereco).Select(x => (ClienteDTO)x).ToList();
             var street_find = await _context.Address.FindAsync(Street);
             var cep_find = await _context.Address.FindAsync(CEP);
 
@@ -93,7 +90,12 @@ namespace DevInSales.Controllers
 
         // PUT: api/Addresse/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<IActionResult> PutAddress(int id, Address address)
         {
             if (id != address.Id)
@@ -124,7 +126,12 @@ namespace DevInSales.Controllers
 
         // POST: api/Addresse
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult<Address>> PostAddress(Address address)
         {
             _context.Address.Add(address);
@@ -134,11 +141,16 @@ namespace DevInSales.Controllers
         }
 
         // DELETE: api/Addresse/5
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [Authorize(Roles = "administrador")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -176,12 +188,16 @@ namespace DevInSales.Controllers
             return _context.Address.Any(e => e.Id == id);
         }
 
-
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpPatch("{id}")]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<Address> patchAddress)
         {
             try
@@ -209,11 +225,5 @@ namespace DevInSales.Controllers
                 return StatusCode(500);
             }
         }
-
-
-
-
-
-
     }
 }

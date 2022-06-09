@@ -1,6 +1,7 @@
 ﻿using DevInSales.Context;
 using DevInSales.DTOs;
 using DevInSales.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -24,12 +25,17 @@ namespace DevInSales.Controllers
         /// <param name="user_id">Filtra pelo Id do usuário</param>
         /// <returns>Busca registros de venda com o Id do usuário</returns>
         /// <response code="200">Registro encontrado.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Registro não encontrado.</response>
         /// <response code="500">Ocorreu uma exceção durante a consulta</response>
         [HttpGet("user/{user_id}/order")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<ICollection<Order>>> GetUserId(int user_id)
         {
             try
@@ -55,12 +61,17 @@ namespace DevInSales.Controllers
         /// <param name="user_id">Filtra pelo Id do vendedor</param>
         /// <returns>Busca registros de venda com o Id do vendedor</returns>
         /// <response code="200"></response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404"></response>
         /// <response code="500"></response>
         [HttpGet("user/{user_id}/buy")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<ICollection<Order>>> GetBuyId(int user_id)
         {
             try
@@ -90,13 +101,18 @@ namespace DevInSales.Controllers
         /// <returns>Atualiza o preço do item de venda</returns>
         /// <response code="204">Registro atualizado.</response>
         /// <response code="400">Requisição incorreta.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Registro não encontrado.</response>
         /// <response code="500">Ocorreu uma exceção durante a consulta</response>
         [HttpPatch("{order_id}/product/{product_id}/price/{price}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult> PatchPrice(int order_id, int orderProduct_id, decimal price)
         {
 
@@ -129,13 +145,18 @@ namespace DevInSales.Controllers
         /// <returns>Atualiza a quantidade do item de venda</returns>
         /// <response code="204">Registro atualizado.</response>
         /// <response code="400">Requisição incorreta.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Registro não encontrado.</response>
         /// <response code="500">Ocorreu uma exceção durante a consulta</response>
         [HttpPatch("{order_id}/product/{product_id}/amount/{amount}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult> PatchAmount(int order_id, int orderProduct_id, int amount)
         {
            
@@ -167,12 +188,17 @@ namespace DevInSales.Controllers
         /// <returns>Busca registros de venda com o Id do order product</returns>
         /// <response code="204">Registro atualizado.</response>
         /// <response code="400">Requisição incorreta.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Registro não encontrado.</response>
         /// <response code="500">Ocorreu uma exceção durante a consulta</response>
         [HttpGet("order/{order_id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<Order>> GetOrderId(int orderProduct_id)
         {
             try
@@ -198,12 +224,17 @@ namespace DevInSales.Controllers
         /// <returns>Cria uma order product</returns>
         /// <response code="204">Registro atualizado.</response>
         /// <response code="400">Requisição incorreta.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Registro não encontrado.</response>
         /// <response code="500">Ocorreu uma exceção durante a consulta</response>
         [HttpPost("/user/{user_id}/order")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult<Order>> PostOrder(OrderCreateDTO order, int city_id)
         {
             if(order.SellerId == 0) { return BadRequest(); }
@@ -253,13 +284,18 @@ namespace DevInSales.Controllers
         /// <returns>Cria uma order product</returns>
         /// <response code="204">Registro atualizado.</response>
         /// <response code="400">Requisição incorreta.</response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Registro não encontrado.</response>
         /// <response code="500">Ocorreu uma exceção durante a consulta</response>
         [HttpPost("order/{order_id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "gerente, administrador")]
 
         public async Task<ActionResult<OrderProduct>> PostOrderProduct (int order_id, [FromBody] OrderProductCreateDTO orderProductDTO)
         {

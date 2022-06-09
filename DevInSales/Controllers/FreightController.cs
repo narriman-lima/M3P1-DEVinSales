@@ -1,6 +1,7 @@
 ﻿using DevInSales.Context;
 using DevInSales.DTOs;
 using DevInSales.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,8 +19,13 @@ namespace DevInSales.Controllers
             _context = context;
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet]
         [Route("{cityId:int}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public ActionResult<IList<FreightResult>> GetFreight(int cityId)
         {
             var cityPricesQueryable = _context.CityPrice.AsQueryable();
@@ -40,8 +46,13 @@ namespace DevInSales.Controllers
             return result;
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet]
         [Route("company/name")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<IEnumerable<ShippingCompany>>> GetCompanyByName(string? name)
         {
             if (name == null)
@@ -55,9 +66,13 @@ namespace DevInSales.Controllers
             return Ok(result);
         }
 
-
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet]
         [Route("company/{id:int}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<ShippingCompany>> GetCompanyById(int id)
         {
             var company = await _context.ShippingCompany.FindAsync(id);
@@ -67,11 +82,16 @@ namespace DevInSales.Controllers
             return Ok(company);
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet]
         [Route("state/{stateId:int}/company/{companyId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<List<StatePrice>>> GetStateCompanyById(int stateId, int companyId)
         {
             try
@@ -90,11 +110,16 @@ namespace DevInSales.Controllers
             }
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet]
         [Route("city/{cityId:int}/company/{companyId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<List<CityPrice>>> GetCityCompanyById(int cityId, int companyId)
         {
             try
@@ -111,8 +136,13 @@ namespace DevInSales.Controllers
             }
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpPost]
         [Route("state/company")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult<List<StatePriceDTO>>> PostStateCompany(IEnumerable<StatePriceDTO> statePrices)
         {
             if (!ExistStateAndCompany(statePrices))
@@ -150,8 +180,13 @@ namespace DevInSales.Controllers
             });
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpPost]
         [Route("city/company")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult<List<CityPriceDTO>>> PostCityCompany(IEnumerable<CityPriceDTO> cityPrices)
         {
             if (!ExistCityAndCompany(cityPrices))
@@ -190,8 +225,13 @@ namespace DevInSales.Controllers
             });
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpDelete]
         [Route("city/{cityPriceId}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "administrador")]
         public async Task<IActionResult> DeleteCityPrice(int cityPriceId)
         {
             var cityPrice = await _context.CityPrice.FindAsync(cityPriceId);
@@ -206,8 +246,13 @@ namespace DevInSales.Controllers
             return BadRequest();
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpDelete]
         [Route("state/{statePriceId}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "administrador")]
         public async Task<IActionResult> DeleteStatePrice(int statePriceId)
         {
             var statePrice = await _context.StatePrice.FindAsync(statePriceId);

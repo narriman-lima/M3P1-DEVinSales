@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using DevInSales.Context;
 using DevInSales.Models;
 using DevInSales.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevInSales.Controllers
 {
@@ -24,9 +25,14 @@ namespace DevInSales.Controllers
         }
 
         // GET: api/State
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<IEnumerable<State>>> GetState(string name)
         {
             List<State> retorno = new List<State>();
@@ -39,7 +45,12 @@ namespace DevInSales.Controllers
             return Ok(retorno);
         }
         //GET /state/{state_id}/
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet("/state/{state_id}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<IEnumerable<State>>> GetStateId(int state_id)
         {
             try
@@ -59,7 +70,12 @@ namespace DevInSales.Controllers
         }
 
         // GET: api/State/5
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<State>> GetState(int id)
         {
             var state = await _context.State.FindAsync(id);
@@ -72,9 +88,14 @@ namespace DevInSales.Controllers
             return state;
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet("{State_Id}/city")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<List<CityStateDTO>>> GetByStateIdCity(int State_Id, string name)
         {
             var state = await _context.State.FindAsync(State_Id);
@@ -122,9 +143,13 @@ namespace DevInSales.Controllers
             return Ok(listDTO);
         }
 
-
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpGet("{State_Id}/city/{City_Id}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<CityStateDTO>> GetByStateIdCityId(int State_Id, int City_Id)
         {
             var state_find = await _context.State.FindAsync(State_Id);
@@ -151,7 +176,12 @@ namespace DevInSales.Controllers
 
         // PUT: api/State/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<IActionResult> PutState(int id, State state)
         {
             if (id != state.Id)
@@ -182,10 +212,15 @@ namespace DevInSales.Controllers
 
         // POST: api/State
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpPost("{state_id}/city")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult<State>> PostState(City city, int state_id)
         {
             var state_findId = await _context.State.FindAsync(state_id);
@@ -219,10 +254,15 @@ namespace DevInSales.Controllers
             }
         }
 
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpPost("{state_id}/city/{city_id}/address")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult<State>> PostState(Address address, int state_id, int city_id)
         {
             var state_findId = await _context.State.FindAsync(state_id);
@@ -268,7 +308,12 @@ namespace DevInSales.Controllers
         }
 
         // DELETE: api/State/5
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "administrador")]
         public async Task<IActionResult> DeleteState(int id)
         {
             var state = await _context.State.FindAsync(id);
