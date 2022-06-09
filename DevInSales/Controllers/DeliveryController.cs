@@ -26,10 +26,14 @@ namespace DevInSales.Controllers
         /// <returns>Buscar registros de delivery com id do endereço e id da order</returns>
         /// <response code="200"></response>
         /// <response code="204"></response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="500"></response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "usuario, gerente, administrador")]
         public async Task<ActionResult<ICollection<Delivery>>> GetDelivery(int address_id, int order_id)
@@ -67,12 +71,16 @@ namespace DevInSales.Controllers
         /// <param name="delivery_date">Insere a data de entrega</param>
         /// <returns>Atualiza data de entrega e status do delivery</returns>
         /// <response code="200"></response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404"></response>
         /// <response code="500"></response>
         [HttpPatch]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult> PatchDelivery(int delivery_id, DateTime delivery_date)
@@ -111,13 +119,17 @@ namespace DevInSales.Controllers
         /// <param name="address_id">Insere o endereco</param>
         /// <returns>Cria uma delivery</returns>
         /// <response code="200"></response>
-        /// <response code="404"></response>
         /// <response code="400"></response>
+        /// <response code="401">Usuário não autenticado.</response>
+        /// <response code="403">Usuário não tem permissão.</response>
+        /// <response code="404"></response>
         /// <response code="500"></response>
         [HttpPost("order/{order_id}/delivery")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "gerente, administrador")]
         public async Task<ActionResult> PostDelivery(int order_id, int address_id, DateTime delivery_forecast)
