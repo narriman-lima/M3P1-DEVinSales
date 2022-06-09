@@ -1,7 +1,7 @@
-﻿using DevInSales.DTOs;
+﻿using DevInSales.Context;
+using DevInSales.DTOs;
 using DevInSales.Enums;
 using DevInSales.Models;
-using DevInSales.Repositories;
 using DevInSales.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,8 +14,15 @@ namespace DevInSales.Controllers
     [Route("api/authentication")]
     public class AuthenticationController : ControllerBase
     {
+        private readonly SqlContext _context;
+
+        public AuthenticationController(SqlContext context)
+        {
+            _context = context;
+        }
+
         /// <summary>
-        /// Realiza login por nome do usuário e senha
+        /// Realiza login por nome do email e senha
         /// </summary>
         /// <returns>Token de Autenticação</returns>
         /// <response code="200">Login efetuado com sucesso.</response>
@@ -23,37 +30,31 @@ namespace DevInSales.Controllers
         /// <response code="403">Usuário não tem permissão.</response>
         /// <response code="404">Usuário e/ou senha incorreto(s).</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("login")]
         public IActionResult Login([FromBody] LoginDTO dto)
         {
-            var user = UserRepository.VerificarUsuarioESenha(dto.Username, dto.Password);
+            try
+            {
+                var user = _context.User.First(x => x.Email.ToLower() == dto.Email.ToLower() && x.Password.ToLower() == dto.Password.ToLower());
 
-            if (user == null) return NotFound("Usuário e/ou senha incorreto(s)");
+                if (user == null) return NotFound("Usuário e/ou senha incorreto(s)");
 
-            var token = TokenService.GenerateToken(user);
+                var profile = _context.Profile.First(x => x.Id == user.ProfileId);
 
-            return Ok($"Bem-vindo(a) {dto.Username} ao sistema de funcionários DEVinSales.\nEste é seu token: \n\n" + token);
+                var token = TokenService.GenerateToken(user.Name, profile.Role);
+
+                return Ok($"Bem-vindo(a) {user.Name} ao sistema de funcionários DEVinSales! Você possui permissão de {user.Role}. Segue seu token: \n\n" + token);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"{ex.Message}");
+            }
 
         }
-
-        /// <summary>
-        /// Lista os usuários cadastrados para facilitar o acesso à informações para login
-        /// </summary>
-        /// <returns>Lista de usuários</returns>
-        /// <response code="200">Lista de usuários encontrada.</response>
-        /// <response code="401">Usuário não autenticado.</response>
-        /// <response code="403">Usuário não tem permissão.</response>
-        /// <response code="404">Lista não encontrada.</response>
-        [Route("funcionarios")]
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public IActionResult ListarUsuarios()
-        => User.IsInRole(Permissoes.Usuario.GetDisplayName())
-        ? Ok(UserRepository.ListarUsuarios().Select(x => new { x.Name, x.DescricaoPermissao }))
-        : Ok(UserRepository.ListarUsuarios());
     }
 }
 

@@ -4,11 +4,11 @@ namespace DevInSales.Enums
 {
     public enum Permissoes
     {
-        [Display(Name = "Usuario")]
-        Usuario = 1,
-        [Display(Name = "Gerente")]
-        Gerente = 2,
-        [Display(Name = "Administrador")]
-        Administrador = 3,
+        [Display(Name = "usuario")]
+        usuario = 1,
+        [Display(Name = "gerente")]
+        gerente,
+        [Display(Name = "administrador")]
+        administrador,
     }
 }

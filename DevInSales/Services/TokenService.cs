@@ -9,12 +9,12 @@ namespace DevInSales.Services
 {
     public static class TokenService
     {
-        public static string GenerateToken(User user)
+        public static string GenerateToken(string name, string role)
         {
             var claims = new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Name.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role.ToString()),
+                    new Claim(ClaimTypes.Name, name),
+                    new Claim(ClaimTypes.Role, role),
                 };
 
             return GenerateToken(claims);
