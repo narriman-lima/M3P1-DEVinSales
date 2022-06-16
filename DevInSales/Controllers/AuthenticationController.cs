@@ -22,7 +22,7 @@ namespace DevInSales.Controllers
         }
 
         /// <summary>
-        /// Realiza login por nome do email e senha
+        /// Realiza login por email e senha
         /// </summary>
         /// <returns>Token de Autenticação</returns>
         /// <response code="200">Login efetuado com sucesso.</response>
@@ -47,7 +47,7 @@ namespace DevInSales.Controllers
 
                 var token = TokenService.GenerateToken(user.Name, profile.Role);
 
-                return Ok($"Bem-vindo(a) {user.Name} ao sistema de funcionários DEVinSales! Você possui permissão de {user.Role}. Segue seu token: \n\n" + token);
+                return Ok($"Bem-vindo(a) {user.Name} ao sistema de funcionários DEVinSales! Você possui permissão de {profile.Role}. Segue seu token: \n\n" + token);
             }
             catch (Exception ex)
             {
