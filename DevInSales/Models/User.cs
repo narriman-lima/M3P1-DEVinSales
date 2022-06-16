@@ -17,10 +17,8 @@ public class User
     [Column("birth_date")]
     public DateTime BirthDate { get; set; }
     public Profile Profile { get; set; }
+    [Column("profile_id")]
     public int ProfileId { get; set; }
-    public string Role { get; set; }
-    public Permissoes Permissao { get; set; }
-    public string DescricaoPermissao => Permissao.GetDisplayName();
 
     public User()
     {
