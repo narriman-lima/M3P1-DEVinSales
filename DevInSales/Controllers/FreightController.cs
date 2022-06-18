@@ -25,7 +25,7 @@ namespace DevInSales.Controllers
         [Route("{cityId:int}")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public ActionResult<IList<FreightResult>> GetFreight(int cityId)
         {
             var cityPricesQueryable = _context.CityPrice.AsQueryable();
@@ -52,7 +52,7 @@ namespace DevInSales.Controllers
         [Route("company/name")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ShippingCompany>>> GetCompanyByName(string? name)
         {
             if (name == null)
@@ -72,7 +72,7 @@ namespace DevInSales.Controllers
         [Route("company/{id:int}")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public async Task<ActionResult<ShippingCompany>> GetCompanyById(int id)
         {
             var company = await _context.ShippingCompany.FindAsync(id);
@@ -91,7 +91,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public async Task<ActionResult<List<StatePrice>>> GetStateCompanyById(int stateId, int companyId)
         {
             try
@@ -119,7 +119,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public async Task<ActionResult<List<CityPrice>>> GetCityCompanyById(int cityId, int companyId)
         {
             try
