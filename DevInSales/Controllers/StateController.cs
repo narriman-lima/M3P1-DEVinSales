@@ -32,7 +32,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<State>>> GetState(string name)
         {
             List<State> retorno = new List<State>();
@@ -50,7 +50,7 @@ namespace DevInSales.Controllers
         [HttpGet("/state/{state_id}")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<State>>> GetStateId(int state_id)
         {
             try
@@ -75,7 +75,7 @@ namespace DevInSales.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public async Task<ActionResult<State>> GetState(int id)
         {
             var state = await _context.State.FindAsync(id);
@@ -95,7 +95,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public async Task<ActionResult<List<CityStateDTO>>> GetByStateIdCity(int State_Id, string name)
         {
             var state = await _context.State.FindAsync(State_Id);
@@ -149,7 +149,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public async Task<ActionResult<CityStateDTO>> GetByStateIdCityId(int State_Id, int City_Id)
         {
             var state_find = await _context.State.FindAsync(State_Id);

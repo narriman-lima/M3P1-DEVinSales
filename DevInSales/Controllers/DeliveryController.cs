@@ -35,7 +35,7 @@ namespace DevInSales.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize(Roles = "usuario, gerente, administrador")]
+        [Authorize]
         public async Task<ActionResult<ICollection<Delivery>>> GetDelivery(int address_id, int order_id)
         {
             var deliverys = _context.Delivery.Include(x => x.Order).Include(x => x.Address).ToList();
